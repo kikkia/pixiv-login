@@ -1,3 +1,13 @@
+var Xvfb = require('xvfb');
+const display = new Xvfb({
+    displayNum: 1,
+    reuse: false,
+    silent: true,
+    xvfb_args: ['-screen', '0', '1280x720x24', '-ac', '-noreset']
+})
+  
+display.startSync()
+
 const puppeteer = require('puppeteer-extra');
 var userAgent = require('user-agents');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');

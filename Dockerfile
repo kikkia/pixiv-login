@@ -1,7 +1,7 @@
-FROM node:lts-alpine
+FROM pmmmwh/puppeteer:16.14.2
 
-RUN apt update \
-  && apt install -yq --no-install-recommends \
+RUN apt-get update \
+  && apt-get install -yq --no-install-recommends \
   gnupg  \
   curl \
   gconf-service \
@@ -74,7 +74,7 @@ ENV DISPLAY=:99
 ENV X11VNC_PASSWORD=password
 ENV XVFB_SCREEN_SIZE=1024x768x24
 WORKDIR /usr/src/app
-COPY ./scripts/entrypoint.sh /entrypoint.sh
+COPY ./scripts/worker-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 USER root
