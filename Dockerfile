@@ -1,4 +1,4 @@
-FROM zenato/puppeteer
+FROM pmmmwh/puppeteer:16.14.2
 
 USER root
 WORKDIR /app
