@@ -19,6 +19,7 @@
   "dependencies": {
     "express": "^4.17.3",
     "puppeteer": "^13.5.1",
+    "puppeteer-extra": "^3.2.3",
     "puppeteer-extra-plugin": "^3.2.0",
     "puppeteer-extra-plugin-stealth": "^2.9.0",
     "querystring": "^0.2.0",
