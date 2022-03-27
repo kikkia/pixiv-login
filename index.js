@@ -37,7 +37,7 @@ app.get('/login', async (req, res) => {
         res.status(400).json({"message": "password query param is required"});
     }
 
-    var browser = await puppeteer.launch({headless: true, args:['--no-sandbox']});
+    var browser = await puppeteer.launch({headless: true, args:['--no-sandbox', '--display=${display.id}']});
     var page = await browser.newPage();
 	await page.setUserAgent(userAgent.toString());
     await page.goto(login_url);
