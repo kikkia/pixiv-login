@@ -1,7 +1,7 @@
 FROM node:lts-alpine
 
-RUN apt-get update \
-  && apt-get install -yq --no-install-recommends \
+RUN apt update \
+  && apt install -yq --no-install-recommends \
   gnupg  \
   curl \
   gconf-service \
