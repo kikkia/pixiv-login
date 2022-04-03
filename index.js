@@ -36,7 +36,7 @@ app.get('/login', async (req, res) => {
     await page.$eval(pass_selector, (el, password) => {el.value = password;}, pass);
     await page.click(login_selector);
     await page.waitFor(1000);
-    await page.screenshot({path: 'screenshot.png'});
+    await browser.close();
     var data = await page._client.send('Network.getAllCookies');
     res.status(200).json(data)
 });
