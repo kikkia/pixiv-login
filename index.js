@@ -27,12 +27,15 @@ app.get('/login', async (req, res) => {
         res.status(400).json({"message": "password query param is required"});
     }
 
-    var browser = await puppeteer.launch({headless: true, args:['--no-sandbox']});
+    var browser = await puppeteer.launch({headless: false, args:['--no-sandbox']});
     var page = await browser.newPage();
 	await page.setUserAgent(userAgent.toString());
     await page.goto(login_url);
-    await page.$eval(user_selector, (el, username) => {el.value = username;}, username);
-    await page.$eval(pass_selector, (el, password) => {el.value = password;}, pass);
+    await page.waitFor(1000)
+    await page.focus(user_selector)
+    await page.keyboard.type(username, {delay: 200});
+    await page.focus(pass_selector)
+    await page.keyboard.type(pass, {delay: 200});
     await page.click(login_selector);
     await page.waitFor(1000);
     var data = await page._client.send('Network.getAllCookies');
