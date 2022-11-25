@@ -29,15 +29,69 @@ app.get('/login', async (req, res) => {
 
     var browser = await puppeteer.launch({headless: true, args:['--no-sandbox']});
     var page = await browser.newPage();
-	await page.setUserAgent(userAgent.toString());
+
+    //Randomize viewport size
+    await page.setViewport({
+        width: 1920 + Math.floor(Math.random() * 100),
+        height: 3000 + Math.floor(Math.random() * 100),
+        deviceScaleFactor: 1,
+        hasTouch: false,
+        isLandscape: false,
+        isMobile: false,
+    });
+
+    await page.evaluateOnNewDocument(() => {
+        // Pass webdriver check
+        Object.defineProperty(navigator, 'webdriver', {
+            get: () => false,
+        });
+    });
+
+    await page.evaluateOnNewDocument(() => {
+        // Pass chrome check
+        window.chrome = {
+            runtime: {},
+            // etc.
+        };
+    });
+
+    await page.evaluateOnNewDocument(() => {
+        //Pass notifications check
+        const originalQuery = window.navigator.permissions.query;
+        return window.navigator.permissions.query = (parameters) => (
+            parameters.name === 'notifications' ?
+                Promise.resolve({ state: Notification.permission }) :
+                originalQuery(parameters)
+        );
+    });
+
+    await page.evaluateOnNewDocument(() => {
+        // Overwrite the `plugins` property to use a custom getter.
+        Object.defineProperty(navigator, 'plugins', {
+            // This just needs to have `length > 0` for the current test,
+            // but we could mock the plugins too if necessary.
+            get: () => [1, 2, 3, 4, 5],
+        });
+    });
+
+    await page.evaluateOnNewDocument(() => {
+        // Overwrite the `languages` property to use a custom getter.
+        Object.defineProperty(navigator, 'languages', {
+            get: () => ['en-US', 'en'],
+        });
+    });
+
+	await page.setUserAgent(userAgent.random().toString());
     await page.goto(login_url);
     await page.waitFor(1000)
     await page.focus(user_selector)
     await page.keyboard.type(username, {delay: 200});
     await page.focus(pass_selector)
     await page.keyboard.type(pass, {delay: 200});
+    await page.waitFor(1000)
     await page.click(login_selector);
     await page.waitFor(1000);
+    await page.screenshot({path: "ss.png"})
     var data = await page._client.send('Network.getAllCookies');
     await browser.close();
     res.status(200).json(data)
